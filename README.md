@@ -1,19 +1,5 @@
 # GearRent Pro
-Multi-branch equipment rental desktop application. Java 17+, Swing, JDBC, Maven, and an InnoDB database. The coursework allows Swing as a UI option. MariaDB Connector/J connects to both MySQL and MariaDB.
-
-## මුලින්ම run කරන විදිහ (Windows)
-
-1. ZIP එක **Extract All** කරන්න. GearRentPro folder එක ඇතුළේ pom.xml සහ database folder එක තියෙනවාද බලන්න.
-2. XAMPP Control Panel එකෙන් **Apache** සහ **MySQL** Start කරන්න. MySQL පේළියේ **Admin** ඔබලා phpMyAdmin open කරන්න.
-3. phpMyAdmin මුල් පිටුවේ **Import → Choose File** යන්න. database/gearrent.sql තෝරලා පහළ **Import / Go** ඔබන්න. සම්පූර්ණ script එක අලුත් setup එකකට **එක පාරක්** import කරන්න. වම් පැත්තේ **gearrent_coursework** පේන්න ඕන. ඔයා කලින් හදපු gearrent_pro database එකත් වෙනම තියෙනවා.
-4. MySQL Server 8.0.16+ භාවිත කරනවා නම් ඒ SQL file එක MySQL Workbench එකේ **File → Open SQL Script** වලින් open කරලා මුළු script එකම execute කරන්න. Coursework එක MySQL ඉල්ලන නිසා final demonstration එකට MySQL Server එකෙන් test කරන්න.
-5. GearRentPro folder එකේ db.properties.example එක copy කරලා **db.properties** කියලා නම දෙන්න. Port එක, database username එක සහ password එක ඔයාගේ database setup එකට ගැළපෙන විදිහට දාන්න. Default එක local port 3306, user root, හිස් password. මේක database login එක. App එකට log වෙන්න වෙනම credentials පහළ තියෙනවා.
-6. IntelliJ IDEA වල **Open** ඔබලා GearRentPro folder එක තෝරන්න. Project SDK එකට JDK 17 හෝ 21 තෝරලා Maven project එක load වෙන්න දෙන්න. src/main/java/gearrent/Main.java open කරලා main method එක ළඟ Run ඔබන්න. පළමු build එකට dependencies download කිරීමට internet ඕන.
-7. Maven install කරලා තියෙනවා නම් වෙනත් ක්‍රමයක් විදිහට pom.xml තියෙන folder එකේ terminal එක open කරලා මේ command එක run කරන්න.
-
-```sh
-mvn clean compile exec:java
-```
+Multi-branch equipment rental desktop application. Java 17+, Swing, JDBC, Maven, and an InnoDB database. The coursework allows Swing as a UI option. MariaDB Connector/J connects to both MySQL and MariaDB
 
 ## Demo logins
 
@@ -58,19 +44,6 @@ SELECT COUNT(*) AS customers FROM customer;
 SELECT rental_id, equipment_id, rental_status FROM rental_list;
 ```
 
-## Business rules used in this implementation
-
-- Dates count both endpoints. A same-day rental is one day. Accept 1–30 days. A rental is issued on its start date. Book future dates with a reservation. Cancel an expired uncollected booking and create a new date range to issue it.
-- Gross rent is the sum of daily prices, rounded to cents per day. Saturday and Sunday use the weekend multiplier. At 7 days apply the long discount first, then the member discount on the remaining rent. Add the security deposit last. Amounts are in LKR.
-- Example: seven days Monday–Sunday for EQ001 are 5 × 2,000 + 2 × 2,400 = 14,800. An 8% long discount gives 13,616. With Silver at 5% the net rent is 12,935.20. Including the 10,000 deposit gives 22,935.20.
-- Demo rates are configurable assumptions: long discount 8%, Regular 0%, Silver 5%, Gold 10%, deposit cap 500,000 and late fee 500 per day. The limit applies across all active and overdue rentals. A reservation checks the projected balance, and conversion checks it again. An unissued reservation does not collect a deposit.
-- Staff collect the deposit in full when issuing an item. Payment status tracks rent (Paid, Partially Paid or Unpaid); it is maintained by staff. The return dialog settles deposit against late/damage charges. Any unpaid rent is tracked separately. A nonempty damage description also supports damage with zero assessed charge.
-- Booking and conversion check date overlaps on the same item. An overdue item with no actual return date is blocked until returned. Calendar availability and current inventory status are distinct. Reservation and rental actions set Reserved and Rented in the inventory view. Under Maintenance is set on damage or by inventory editing. Repair completion is recorded by setting Available.
-- A return records actual return date, damage description, late/damage charges, refund and extra due in one transaction. Cancellation in this application is for open reservations. A returned item can be issued again starting the following day under the inclusive-date policy.
-- InnoDB transactions lock the equipment and customer rows and recheck business rules. Reservation conversion also locks the reservation and excludes it from its own overlap test. Errors roll back the entire operation.
-- Customers are shared across branches. Operational records, inventory and reports follow branch permissions. The seeded staff user has equipment-edit permission. Managers may view global categories and create/edit branch-owned categories. Admin maintains global configuration.
-- Branch revenue uses billed net rent, excluding deposits, counted on the issue date. Counts include unpaid rentals; this is an accrual report. Late/damage amounts belong to their return date. Utilization = distinct rented calendar days / selected calendar days × 100. Reports are historical through today. Available days exclude reserved and maintenance days. The return day counts as rented and maintenance starts the following calendar day. Equipment with transaction history stays with its original branch. The sample assumes listed equipment was in service throughout the selected reporting period.
-
 ## Source layout
 
 | Folder | Responsibility |
@@ -82,14 +55,6 @@ SELECT rental_id, equipment_id, rental_status FROM rental_list;
 | src/main/java/gearrent/entity | Session, quote and catalog definitions |
 | database | MySQL/MariaDB schema, views, sample transactions and seed data |
 
-## Troubleshooting
-
-- Connection refused: start the database service and check the port in db.properties.
-- Access denied: check the database username and password. Use the GearRent demo logins only in the application's login window.
-- Unknown database or missing table: import database/gearrent.sql and verify the database name.
-- No suitable driver: load the Maven project or use the Maven command above so the JDBC dependency is on the classpath.
-- Duplicate table during import: check whether you already imported the script. For a partly imported database, export a backup and use a fresh database name in the first two SQL statements and in db.properties before retrying.
-- Branch or category unavailable in an operation: check the login role, ownership, active flag, dates, maintenance and overlaps.
 
 ## GitHub submission
 
