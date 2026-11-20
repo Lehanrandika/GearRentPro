@@ -56,15 +56,6 @@ SELECT rental_id, equipment_id, rental_status FROM rental_list;
 | database | MySQL/MariaDB schema, views, sample transactions and seed data |
 
 
-## GitHub submission
+## GitHub submission Link
 
-This project includes a local Git repository with commits for the database, Java implementation and setup guide. Extract the entire ZIP before opening it. To submit, create an empty GitHub repository under your account, then run these commands from GearRentPro, substituting your own repository URL.
-
-```sh
-git remote add origin https://github.com/YOUR-USERNAME/GearRentPro.git
-git push -u origin main
-```
-
-Submit your own repository URL. Keep the SQL script and README with the source.
-
-JDBC driver documentation: https://mariadb.com/docs/connectors/mariadb-connector-j/java-connector-using-maven
+https://github.com/Lehanrandika/GearRentPro
